@@ -15,6 +15,7 @@ test.before(async () => {
 });
 
 test.after(async () => {
+  writeLeads([]);
   await new Promise((resolve, reject) => {
     app.close((error) => (error ? reject(error) : resolve()));
   });
