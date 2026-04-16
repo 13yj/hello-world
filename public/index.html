@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>线索收集</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <p class="eyebrow">线索收集 MVP</p>
+        <h1>预约产品咨询</h1>
+        <p class="description">请留下您的联系方式，我们会尽快与您取得联系。</p>
+      </section>
+
+      <section class="card">
+        <form id="lead-form" class="form">
+          <label>
+            <span>姓名 *</span>
+            <input name="name" type="text" placeholder="请输入姓名" />
+          </label>
+          <label>
+            <span>手机号 *</span>
+            <input name="phone" type="tel" placeholder="请输入手机号" />
+          </label>
+          <label>
+            <span>公司</span>
+            <input name="company" type="text" placeholder="请输入公司名称" />
+          </label>
+          <label>
+            <span>留言</span>
+            <textarea name="message" rows="4" placeholder="请输入您的需求"></textarea>
+          </label>
+
+          <p id="form-message" class="message" aria-live="polite"></p>
+          <button id="submit-button" type="submit">提交线索</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

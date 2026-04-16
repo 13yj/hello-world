@@ -1,0 +1,12 @@
+[
+  {
+    "id": "0ab24093-bc34-4e44-b24b-393881fa1b6d",
+    "name": "张三",
+    "phone": "13800138000",
+    "company": "Tokfinity",
+    "message": "想了解产品",
+    "status": "new",
+    "createdAt": "2026-04-16T08:17:49.422Z",
+    "updatedAt": "2026-04-16T08:17:49.422Z"
+  }
+]
