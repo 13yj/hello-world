@@ -1,10 +1,13 @@
+import type { ReactNode } from 'react';
 import { Link, NavLink, Route, Routes } from 'react-router-dom';
 
 const highlights = [
   'AI 驱动的线索收集与跟进流程，适合快速上线演示。',
-  '官网展示、咨询入口与留资表单容器一页串联。',
-  '后台管理路由预留完成，便于后续接入线索列表与状态流转。',
+  '官网展示、咨询入口与留资区域在同一页面闭环呈现。',
+  '后台管理路由已预留基础布局，便于后续接入线索列表与状态流转。',
 ];
+
+const adminColumns = ['姓名', '手机号', '公司', '状态'];
 
 function SiteHeader() {
   return (
@@ -24,29 +27,40 @@ function SiteHeader() {
           to="/admin"
           className={({ isActive }) => (isActive ? 'nav-link nav-link-active' : 'nav-link')}
         >
-          后台路由
+          后台首页
         </NavLink>
       </div>
     </nav>
   );
 }
 
+function PageLayout({ children, pageClassName = '' }: { children: ReactNode; pageClassName?: string }) {
+  return (
+    <div className={`page-shell ${pageClassName}`.trim()}>
+      <SiteHeader />
+      {children}
+    </div>
+  );
+}
+
 function HomePage() {
   return (
-    <div className="page-shell">
-      <SiteHeader />
+    <PageLayout>
       <header className="hero-card">
         <span className="eyebrow">Lead Collection MVP</span>
-        <h1>线索收集官网演示站</h1>
+        <h1>线索收集官网首页</h1>
         <p className="hero-copy">
-          面向销售与运营团队的轻量级官网骨架，帮助快速展示产品价值、承接咨询线索，并为后续后台管理功能预留扩展空间。
+          用统一的官网样式展示产品标题、核心卖点与咨询入口，支持用户直接跳转到留资区域，也可进入后台查看后续线索承载页面。
         </p>
         <div className="hero-actions">
           <a className="primary-button" href="#lead-form-container">
             立即咨询
           </a>
+          <a className="secondary-button" href="#lead-form-container">
+            滚动到留资区域
+          </a>
           <Link className="secondary-button" to="/admin">
-            查看后台骨架
+            查看后台页
           </Link>
         </div>
       </header>
@@ -63,23 +77,21 @@ function HomePage() {
 
         <section className="panel contact-panel">
           <h2>咨询入口</h2>
-          <p>
-            可以通过页面按钮跳转至留资区域，也可直接联系售前顾问进行需求沟通。
-          </p>
+          <p>用户可以从首页主按钮快速跳转到留资区域，也可以通过统一风格的咨询卡片了解产品对接方式。</p>
           <div className="contact-card">
             <span>售前咨询邮箱</span>
             <strong>contact@example.com</strong>
           </div>
           <div className="contact-card shared-style-card">
-            <span>统一样式说明</span>
-            <strong>首页与后台共用同一套深色卡片、按钮和占位表格样式。</strong>
+            <span>页面统一样式</span>
+            <strong>首页与后台共用深色卡片、圆角按钮和表格容器样式，便于后续继续扩展。</strong>
           </div>
         </section>
 
         <section className="panel form-panel" id="lead-form-container">
-          <h2>留资表单容器</h2>
-          <p>当前子任务先提供页面容器骨架，后续可在此接入字段、校验与提交流程。</p>
-          <div className="form-placeholder">
+          <h2>留资区域</h2>
+          <p>当前子任务先完成可滚动定位的留资容器，后续可在此接入表单字段、校验与提交流程。</p>
+          <div className="form-placeholder" aria-label="留资表单占位">
             <div className="placeholder-row">
               <span>姓名 *</span>
               <div />
@@ -97,44 +109,63 @@ function HomePage() {
               <div />
             </div>
             <button className="primary-button" type="button">
-              提交按钮占位
+              提交入口占位
             </button>
           </div>
         </section>
       </main>
-    </div>
+    </PageLayout>
   );
 }
 
 function AdminPage() {
   return (
-    <div className="page-shell admin-shell">
-      <SiteHeader />
+    <PageLayout pageClassName="admin-shell">
       <section className="panel admin-panel">
         <span className="eyebrow">Admin Route</span>
-        <h1>后台页面骨架</h1>
-        <p>
-          当前页面用于承接后续线索列表、状态切换与管理能力。本次仅完成演示所需的路由与布局骨架。
-        </p>
-        <div className="admin-placeholder">
+        <h1>后台线索列表基础布局</h1>
+        <p>当前页面提供线索列表承载区、表头和示例行，为后续接入查询数据与状态更新能力预留结构。</p>
+        <div className="admin-placeholder" aria-label="线索列表占位表格">
           <div className="table-head">
-            <span>姓名</span>
-            <span>手机号</span>
-            <span>公司</span>
-            <span>状态</span>
+            {adminColumns.map((column) => (
+              <span key={column}>{column}</span>
+            ))}
           </div>
           <div className="table-row muted-row">
-            <span>待接入数据</span>
-            <span>--</span>
-            <span>--</span>
+            <span>示例线索</span>
+            <span>138****0000</span>
+            <span>Demo Company</span>
             <span>new</span>
           </div>
+          <div className="table-row muted-row">
+            <span>待接入真实数据</span>
+            <span>--</span>
+            <span>--</span>
+            <span>pending</span>
+          </div>
         </div>
-        <Link className="secondary-button" to="/">
+        <div className="hero-actions">
+          <Link className="secondary-button" to="/">
+            返回首页
+          </Link>
+        </div>
+      </section>
+    </PageLayout>
+  );
+}
+
+function NotFoundPage() {
+  return (
+    <PageLayout>
+      <section className="panel admin-panel">
+        <span className="eyebrow">404</span>
+        <h1>页面不存在</h1>
+        <p>当前仅提供官网首页与 /admin 两个基础路由入口。</p>
+        <Link className="primary-button" to="/">
           返回首页
         </Link>
       </section>
-    </div>
+    </PageLayout>
   );
 }
 
@@ -143,6 +174,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/admin" element={<AdminPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
