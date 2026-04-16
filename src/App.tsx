@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, NavLink, Route, Routes } from 'react-router-dom';
 
 const highlights = [
   'AI 驱动的线索收集与跟进流程，适合快速上线演示。',
@@ -6,9 +6,35 @@ const highlights = [
   '后台管理路由预留完成，便于后续接入线索列表与状态流转。',
 ];
 
+function SiteHeader() {
+  return (
+    <nav className="site-nav" aria-label="主导航">
+      <Link className="brand-mark" to="/">
+        LeadFlow MVP
+      </Link>
+      <div className="nav-links">
+        <NavLink
+          to="/"
+          className={({ isActive }) => (isActive ? 'nav-link nav-link-active' : 'nav-link')}
+          end
+        >
+          官网首页
+        </NavLink>
+        <NavLink
+          to="/admin"
+          className={({ isActive }) => (isActive ? 'nav-link nav-link-active' : 'nav-link')}
+        >
+          后台路由
+        </NavLink>
+      </div>
+    </nav>
+  );
+}
+
 function HomePage() {
   return (
     <div className="page-shell">
+      <SiteHeader />
       <header className="hero-card">
         <span className="eyebrow">Lead Collection MVP</span>
         <h1>线索收集官网演示站</h1>
@@ -43,6 +69,10 @@ function HomePage() {
           <div className="contact-card">
             <span>售前咨询邮箱</span>
             <strong>contact@example.com</strong>
+          </div>
+          <div className="contact-card shared-style-card">
+            <span>统一样式说明</span>
+            <strong>首页与后台共用同一套深色卡片、按钮和占位表格样式。</strong>
           </div>
         </section>
 
@@ -79,6 +109,7 @@ function HomePage() {
 function AdminPage() {
   return (
     <div className="page-shell admin-shell">
+      <SiteHeader />
       <section className="panel admin-panel">
         <span className="eyebrow">Admin Route</span>
         <h1>后台页面骨架</h1>
