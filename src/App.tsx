@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState } from 'react'
+import { FormEvent, useMemo, useRef, useState } from 'react'
 
 type FormState = {
   name: string
@@ -23,6 +23,7 @@ const highlights = [
 export default function App() {
   const [form, setForm] = useState<FormState>(initialForm)
   const [submitted, setSubmitted] = useState(false)
+  const successMessageRef = useRef<HTMLParagraphElement | null>(null)
 
   const canSubmit = useMemo(() => {
     return form.name.trim() !== '' && form.phone.trim() !== ''
@@ -31,7 +32,13 @@ export default function App() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!canSubmit) return
+
     setSubmitted(true)
+    setForm(initialForm)
+
+    window.requestAnimationFrame(() => {
+      successMessageRef.current?.focus()
+    })
   }
 
   const jumpToConsult = () => {
@@ -55,6 +62,7 @@ export default function App() {
               查看留资表单
             </a>
           </div>
+          <p className="jump-hint">首页主按钮与辅助链接都会稳定定位到下方留资表单区域。</p>
         </div>
         <div className="hero-card">
           <h2>核心卖点</h2>
@@ -78,7 +86,10 @@ export default function App() {
             联系人姓名
             <input
               value={form.name}
-              onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
+              onChange={(event) => {
+                setSubmitted(false)
+                setForm((current) => ({ ...current, name: event.target.value }))
+              }}
               placeholder="请输入姓名"
             />
           </label>
@@ -86,7 +97,10 @@ export default function App() {
             联系电话
             <input
               value={form.phone}
-              onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))}
+              onChange={(event) => {
+                setSubmitted(false)
+                setForm((current) => ({ ...current, phone: event.target.value }))
+              }}
               placeholder="请输入电话"
             />
           </label>
@@ -94,7 +108,10 @@ export default function App() {
             公司名称
             <input
               value={form.company}
-              onChange={(event) => setForm((current) => ({ ...current, company: event.target.value }))}
+              onChange={(event) => {
+                setSubmitted(false)
+                setForm((current) => ({ ...current, company: event.target.value }))
+              }}
               placeholder="请输入公司名称"
             />
           </label>
@@ -103,7 +120,10 @@ export default function App() {
             <textarea
               rows={4}
               value={form.message}
-              onChange={(event) => setForm((current) => ({ ...current, message: event.target.value }))}
+              onChange={(event) => {
+                setSubmitted(false)
+                setForm((current) => ({ ...current, message: event.target.value }))
+              }}
               placeholder="请简单描述您的业务场景"
             />
           </label>
@@ -111,7 +131,11 @@ export default function App() {
             提交咨询
           </button>
           <p className="form-hint">联系人姓名和联系电话为必填项。</p>
-          {submitted ? <p className="success-message">咨询信息已提交，演示页面已完成首页到留资入口闭环。</p> : null}
+          {submitted ? (
+            <p ref={successMessageRef} className="success-message" tabIndex={-1}>
+              咨询信息已提交，演示页面已完成首页到留资入口闭环。
+            </p>
+          ) : null}
         </form>
       </section>
     </main>
