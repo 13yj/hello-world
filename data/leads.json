@@ -1,0 +1,12 @@
+[
+  {
+    "id": "5ea49de8-bdb5-46f7-b9e1-8a62efb30055",
+    "name": "Alice",
+    "phone": "13800138000",
+    "company": "Demo",
+    "message": "Hi",
+    "status": "new",
+    "createdAt": "2026-04-16T03:47:34.846Z",
+    "updatedAt": "2026-04-16T03:47:34.846Z"
+  }
+]
