@@ -5,6 +5,6 @@
   "description": "Leads MVP app with site and admin in one runtime",
   "scripts": {
     "start": "node src/server.js",
-    "test": "node tests/mvp-flow.test.js"
+    "test": "node tests/leads-api.test.js"
   }
 }
