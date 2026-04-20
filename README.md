@@ -1,1 +1,3 @@
-这是一个崭新的项目，你可以在这里做任何事情
+# hello-world
+
+Minimal leads API with runnable automated tests.
