@@ -1,0 +1,10 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Leads MVP app with site and admin in one runtime",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node tests/leads-api.test.js"
+  }
+}
