@@ -1,0 +1,16 @@
+{
+  "projectName": "Lead Collection MVP",
+  "modules": [
+    {
+      "name": "Lead Form",
+      "entity": "lead",
+      "fields": [
+        { "name": "name", "type": "string", "required": true },
+        { "name": "phone", "type": "string", "required": true },
+        { "name": "company", "type": "string" },
+        { "name": "message", "type": "string" },
+        { "name": "status", "type": "string", "required": true }
+      ]
+    }
+  ]
+}
