@@ -1,5 +1,6 @@
 {
   "name": "tech-solution-api",
+  "type": "module",
   "version": "1.0.0",
   "description": "Tech solution generation API - accepts product requirements and generates structured technical solution documents",
   "main": "dist/server.js",

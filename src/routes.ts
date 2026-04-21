@@ -15,7 +15,7 @@ export function registerRoutes(app: FastifyInstance): void {
       return reply.status(400).send({
         success: false,
         error: 'Missing required field: requirement'
-      } satisfies GenerateSolutionResponse)
+      } as GenerateSolutionResponse)
     }
 
     const { requirement } = body
@@ -24,14 +24,14 @@ export function registerRoutes(app: FastifyInstance): void {
       return reply.status(400).send({
         success: false,
         error: 'requirement.title is required and must be a string'
-      } satisfies GenerateSolutionResponse)
+      } as GenerateSolutionResponse)
     }
 
     if (!requirement.description || typeof requirement.description !== 'string') {
       return reply.status(400).send({
         success: false,
         error: 'requirement.description is required and must be a string'
-      } satisfies GenerateSolutionResponse)
+      } as GenerateSolutionResponse)
     }
 
     try {
@@ -40,13 +40,13 @@ export function registerRoutes(app: FastifyInstance): void {
       return reply.status(200).send({
         success: true,
         data: solution
-      } satisfies GenerateSolutionResponse)
+      } as GenerateSolutionResponse)
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error'
       return reply.status(500).send({
         success: false,
         error: `Generation failed: ${message}`
-      } satisfies GenerateSolutionResponse)
+      } as GenerateSolutionResponse)
     }
   })
 
@@ -59,13 +59,13 @@ export function registerRoutes(app: FastifyInstance): void {
       return reply.status(404).send({
         success: false,
         error: `Solution not found: ${id}`
-      } satisfies GenerateSolutionResponse)
+      } as GenerateSolutionResponse)
     }
 
     return reply.status(200).send({
       success: true,
       data: solution
-    } satisfies GenerateSolutionResponse)
+    } as GenerateSolutionResponse)
   })
 
   /** GET /api/tech-solution - List all generated solutions */
