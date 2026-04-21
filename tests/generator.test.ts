@@ -2,6 +2,7 @@ import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, test } from 'vitest';
+import { parseTechnicalSolution } from '../src/parser.js';
 import { buildFiles, generateProject } from '../src/service.js';
 import type { TechnicalSolution } from '../src/types.js';
 
@@ -43,5 +44,28 @@ describe('code generation service', () => {
     const targetFile = join(outputDir, generated[0].path);
     expect(existsSync(targetFile)).toBe(true);
     expect(readFileSync(targetFile, 'utf8')).toContain('export interface Lead');
+  });
+
+  test('parseTechnicalSolution supports markdown technical solution documents', () => {
+    const markdown = `# 技术方案：线索收集官网与后台管理 MVP
+### 模块 2：留资表单模块
+字段：
+- \`name\`
+- \`phone\`
+- \`company\`
+- \`message\`
+### 模块 4：后台管理模块
+职责：
+- 展示线索列表
+- 支持修改状态
+### 模块 5：接口模块
+建议最小接口集合：`;
+
+    const parsed = parseTechnicalSolution(markdown);
+    expect(parsed.projectName).toContain('线索收集官网与后台管理 MVP');
+    expect(parsed.modules).toHaveLength(3);
+    expect(parsed.modules[0].fields.map((field) => field.name)).toContain('name');
+    expect(parsed.modules[1].entity).toBe('adminLead');
+    expect(parsed.modules[2].entity).toBe('lead');
   });
 });
