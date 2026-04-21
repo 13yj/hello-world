@@ -258,6 +258,8 @@ function toCamelCase(str: string): string {
 
 /** Convert string to kebab-case */
 function toKebabCase(str: string): string {
+  // If the string contains non-ASCII characters, just trim and join on whitespace
+  if (/[^\x00-\x7F]/.test(str)) return str.trim().replace(/\s+/g, '-')
   return str
     .replace(/[^\w\s]/g, '')
     .trim()
