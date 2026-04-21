@@ -1,0 +1,1 @@
+{"name":"hello-world","version":"1.0.0","private":true,"description":"Lead capture website and admin MVP","main":"server.js","scripts":{"start":"node server.js","test":"node --test"}}
