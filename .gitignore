@@ -1,4 +1,4 @@
 node_modules/
 dist/
 data/
-_test_debug.ts
+*.log
