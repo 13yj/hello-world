@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>后台线索管理</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="page admin-page">
+      <section class="admin-panel">
+        <div class="admin-header">
+          <div>
+            <p class="eyebrow">Admin</p>
+            <h1>线索列表</h1>
+            <p class="description">查看已提交的线索，并更新当前跟进状态。</p>
+          </div>
+          <a class="back-link" href="/">返回官网</a>
+        </div>
+
+        <p id="admin-feedback" class="feedback" role="status" aria-live="polite"></p>
+
+        <div class="table-wrap">
+          <table class="lead-table">
+            <thead>
+              <tr>
+                <th>姓名</th>
+                <th>手机号</th>
+                <th>公司</th>
+                <th>留言</th>
+                <th>状态</th>
+                <th>提交时间</th>
+              </tr>
+            </thead>
+            <tbody id="lead-table-body">
+              <tr>
+                <td colspan="6" class="empty-cell">加载中...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const feedback = document.getElementById('admin-feedback');
+      const tableBody = document.getElementById('lead-table-body');
+      const statuses = ['new', 'contacted', 'closed'];
+
+      function formatTime(value) {
+        if (!value) return '-';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return value;
+        return new Intl.DateTimeFormat('zh-CN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit'
+        }).format(date);
+      }
+
+      function setFeedback(message, type) {
+        feedback.textContent = message || '';
+        feedback.className = 'feedback';
+        if (type) {
+          feedback.classList.add(type === 'error' ? 'feedback-error' : 'feedback-success');
+        }
+      }
+
+      function renderEmpty(message) {
+        tableBody.innerHTML = `<tr><td colspan="6" class="empty-cell">${message}</td></tr>`;
+      }
+
+      function renderRows(leads) {
+        if (!leads.length) {
+          renderEmpty('暂无线索数据');
+          return;
+        }
+
+        tableBody.innerHTML = leads.map((lead) => `
+          <tr>
+            <td>${lead.name || '-'}</td>
+            <td>${lead.phone || '-'}</td>
+            <td>${lead.company || '-'}</td>
+            <td class="message-cell">${lead.message || '-'}</td>
+            <td>
+              <select class="status-select" data-lead-id="${lead.id}" aria-label="更新 ${lead.name || '线索'} 状态">
+                ${statuses.map((status) => `<option value="${status}" ${lead.status === status ? 'selected' : ''}>${status}</option>`).join('')}
+              </select>
+            </td>
+            <td>${formatTime(lead.createdAt)}</td>
+          </tr>
+        `).join('');
+      }
+
+      async function loadLeads() {
+        try {
+          const response = await fetch('/api/admin/leads');
+          const result = await response.json();
+          if (!response.ok) {
+            throw new Error(result.message || '加载线索失败。');
+          }
+          renderRows(Array.isArray(result.data) ? result.data : []);
+        } catch (error) {
+          renderEmpty('线索加载失败，请稍后重试');
+          setFeedback(error.message || '线索加载失败。', 'error');
+        }
+      }
+
+      async function handleStatusChange(event) {
+        const select = event.target.closest('.status-select');
+        if (!select) return;
+
+        const previous = select.dataset.previousValue || select.value;
+        const nextStatus = select.value;
+        const leadId = select.dataset.leadId;
+
+        select.disabled = true;
+        setFeedback('状态更新中...', 'success');
+
+        try {
+          const response = await fetch(`/api/admin/leads/${leadId}/status`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: nextStatus })
+          });
+          const result = await response.json();
+          if (!response.ok) {
+            throw new Error(result.message || '状态更新失败。');
+          }
+          setFeedback(result.message || '状态更新成功。', 'success');
+          await loadLeads();
+        } catch (error) {
+          select.value = previous;
+          setFeedback(error.message || '状态更新失败。', 'error');
+        } finally {
+          select.disabled = false;
+        }
+      }
+
+      tableBody.addEventListener('focusin', (event) => {
+        const select = event.target.closest('.status-select');
+        if (select) {
+          select.dataset.previousValue = select.value;
+        }
+      });
+
+      tableBody.addEventListener('change', handleStatusChange);
+
+      loadLeads();
+    </script>
+  </body>
+</html>

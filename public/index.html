@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>官网留资</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Lead Capture MVP</p>
+          <h1>留下联系方式，获取产品咨询方案</h1>
+          <p class="description">
+            填写基础信息后，我们会尽快与您联系，提供适合您业务场景的解决建议。
+          </p>
+          <p class="admin-entry"><a href="/admin">进入后台查看线索</a></p>
+        </div>
+        <form id="lead-form" class="lead-form" novalidate>
+          <div class="field-group">
+            <label for="name">姓名 *</label>
+            <input id="name" name="name" type="text" autocomplete="name" />
+            <p class="error" data-error-for="name"></p>
+          </div>
+
+          <div class="field-group">
+            <label for="phone">手机号 *</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" />
+            <p class="error" data-error-for="phone"></p>
+          </div>
+
+          <div class="field-group">
+            <label for="company">公司</label>
+            <input id="company" name="company" type="text" autocomplete="organization" />
+          </div>
+
+          <div class="field-group">
+            <label for="message">留言</label>
+            <textarea id="message" name="message" rows="4"></textarea>
+          </div>
+
+          <button id="submit-button" type="submit">提交线索</button>
+          <p id="form-feedback" class="feedback" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById('lead-form');
+      const feedback = document.getElementById('form-feedback');
+      const submitButton = document.getElementById('submit-button');
+
+      function setError(field, message) {
+        const errorNode = document.querySelector(`[data-error-for="${field}"]`);
+        if (errorNode) {
+          errorNode.textContent = message;
+        }
+      }
+
+      function clearErrors() {
+        setError('name', '');
+        setError('phone', '');
+      }
+
+      function validate(values) {
+        clearErrors();
+        let valid = true;
+
+        if (!values.name.trim()) {
+          setError('name', '请输入姓名。');
+          valid = false;
+        }
+
+        if (!values.phone.trim()) {
+          setError('phone', '请输入手机号。');
+          valid = false;
+        }
+
+        return valid;
+      }
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const values = {
+          name: form.name.value,
+          phone: form.phone.value,
+          company: form.company.value,
+          message: form.message.value
+        };
+
+        feedback.textContent = '';
+        feedback.className = 'feedback';
+
+        if (!validate(values)) {
+          feedback.textContent = '请先完善必填信息。';
+          feedback.classList.add('feedback-error');
+          return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = '提交中...';
+
+        try {
+          const response = await fetch('/api/leads', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values)
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(result.message || '提交失败，请稍后重试。');
+          }
+
+          feedback.textContent = result.message || '提交成功，我们会尽快与您联系。';
+          feedback.classList.add('feedback-success');
+          form.reset();
+          clearErrors();
+        } catch (error) {
+          feedback.textContent = error.message || '提交失败，请稍后重试。';
+          feedback.classList.add('feedback-error');
+        } finally {
+          submitButton.disabled = false;
+          submitButton.textContent = '提交线索';
+        }
+      });
+    </script>
+  </body>
+</html>
