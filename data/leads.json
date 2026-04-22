@@ -1,0 +1,22 @@
+[
+  {
+    "id": "e6040bb9-2b7a-4f7f-bde4-35350c8a42b2",
+    "name": "Bob",
+    "phone": "13900000000",
+    "company": "",
+    "message": "",
+    "status": "new",
+    "createdAt": "2026-04-16T03:37:51.243Z",
+    "updatedAt": "2026-04-16T03:37:51.243Z"
+  },
+  {
+    "id": "1b34491e-e91c-425b-8f7b-ae2b3e8e8e55",
+    "name": "Alice",
+    "phone": "13800000000",
+    "company": "Tokfinity",
+    "message": "Need a demo",
+    "status": "contacted",
+    "createdAt": "2026-04-16T03:37:51.234Z",
+    "updatedAt": "2026-04-16T03:37:51.240Z"
+  }
+]
