@@ -1,0 +1,21 @@
+{
+  "name": "code-generation-service",
+  "version": "1.0.0",
+  "description": "Code generation service that parses technical docs and generates code files",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx src/server.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "fastify": "^5.3.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "tsx": "^4.19.4",
+    "vitest": "^3.1.3",
+    "@types/node": "^22.15.3"
+  }
+}
